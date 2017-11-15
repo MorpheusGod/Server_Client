@@ -24,13 +24,14 @@ namespace Server
             listenerSocket.Bind(ipEnd);
             Console.WriteLine($"[{DateTime.Now.ToString()}] Сервер запущен...");
             Console.WriteLine($"[{DateTime.Now.ToString()}] Ожидаю входящие подключения..");
+            listenerSocket.Listen(0);
+
             while (true)
             {
-                
-                listenerSocket.Listen(0);
+
                 Socket clientSocket = listenerSocket.Accept();
                 Thread clientThread = new Thread(() => ClientConnection(clientSocket));
-                Console.WriteLine($"[{DateTime.Now.ToString()}] Есть подключение");
+                Console.WriteLine($"[{DateTime.Now.ToString()}] [{((IPEndPoint)clientSocket.RemoteEndPoint).Address.ToString()}] подключился");
                 clientThread.Start();
             }
             
@@ -51,7 +52,7 @@ namespace Server
                 Array.Copy(buffer, rData, readByte);
                 string data = Encoding.ASCII.GetString(rData);
 
-                Console.WriteLine($"[{DateTime.Now.ToString()}] Клиент написал: " +data);
+                Console.WriteLine($"[{DateTime.Now.ToString()}] [{((IPEndPoint)clientSocket.RemoteEndPoint).Address.ToString()}] написал: " +data);
                 if (commands.ContainsKey(data))
                     Process.Start(commands[data]);
 
@@ -60,6 +61,7 @@ namespace Server
             Console.WriteLine($"[{DateTime.Now.ToString()}] Клиент отключился");
             Console.ReadKey();
         }
+
         static Dictionary<string, ProcessStartInfo> CreateCommands()
         {
             Dictionary<string, ProcessStartInfo> commands = new Dictionary<string, ProcessStartInfo>();

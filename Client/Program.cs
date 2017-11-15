@@ -18,7 +18,7 @@ namespace Client
             string ThData = ThToday.ToString();
             Socket master = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             int port = 904;
-            string ip = "127.0.0.1";
+            string ip = "192.168.1.226";
             string sendData = "";
             IPEndPoint ipEnd = new IPEndPoint(IPAddress.Parse(ip), port);
             Console.WriteLine("******Remote Client******");
